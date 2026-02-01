@@ -71,8 +71,15 @@
     pulse.enable = true;
   };
 
+  users.users = {
+    # password: temp a
+    root.initialHashedPassword = "$6$FRmKgElD/80xQiXn$aF.tKv0VOLj9D3aUJjoYsj3AzSj1rq5fVooE7tgtNuTawt8ZWgaRyUUxsikX5whbna4jrzXrDZmVFqik.kyc2/";
+  };
+
   # Define a user account
   users.users.thijzer = {
+    # password: temp b
+    initialHashedPassword = "$6$iLmo7C9VoAnJZ6v1$qCSORkbiY44IbcrrF1DcTnJtpOkqeD2tGgUoaDgtzPdFqKWKJ28AhJqmuOf8IWoSNu2DQJM.QlWO1Ok05kFgp0";
     isNormalUser = true;
     description = "thijzer";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
