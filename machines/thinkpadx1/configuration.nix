@@ -46,11 +46,15 @@
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = false;
+  services.xserver.enable = true;
 
-  # Enable the GNOME Desktop Environment.
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
+  # Enable Bluetooth
+  hardware.bluetooth.enable = true;
+
+  # Enable KDE Plasma Desktop Environment.
+  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+  services.desktopManager.plasma6.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -91,7 +95,9 @@
     description = "Thijzer";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
-    #  thunderbird
+      kdePackages.konsole
+      kdePackages.dolphin
+      kdePackages.kate
       google-chrome
       filezilla
       postman
@@ -103,13 +109,6 @@
       teams-for-linux
       opencode
       localsend
-      
-      # GNOME Extensions
-      gnomeExtensions.caffeine
-      gnomeExtensions.gsconnect
-      gnomeExtensions.clipboard-indicator
-      gnomeExtensions.appindicator
-      gnomeExtensions.vitals
     ];
   };
 
@@ -120,6 +119,10 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  # Nix garbage collection
+  nix.gc.automatic = true;
+  nix.gc.dates = "weekly";
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
