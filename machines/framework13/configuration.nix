@@ -162,7 +162,7 @@ in
       localsend
       ansible
       distrobox
-      syncthingtray
+      syncthing
 
       # GNOME Extensions
       # gnomeExtensions.caffeine
