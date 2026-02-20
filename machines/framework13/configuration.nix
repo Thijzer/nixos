@@ -2,8 +2,12 @@
 # Location: /etc/nixos/configuration.nix
 
 { config, pkgs, ... }:
-
+let
+  unstable = import <unstable> {config.allowUnfree = true;};
+in
 {
+#  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   imports =
     [
       <nixos-hardware/framework/13-inch/7040-amd>
@@ -133,7 +137,10 @@
     };
   };
 
-  programs.ssh.startAgent = true;
+  #programs.ssh.startAgent = true;
+
+  # Enable KDE Connect
+  programs.kdeconnect.enable = true;
 
   # Define a user account
   users.users.thijzer = {
@@ -154,6 +161,8 @@
       opencode
       localsend
       ansible
+      distrobox
+      syncthingtray
 
       # GNOME Extensions
       # gnomeExtensions.caffeine
@@ -170,11 +179,38 @@
     ghostty
     git
     btop
-    gnumake
-    # Note: zen-browser is often installed via a flake or specific overlay
-    # as it might not be in the standard nixpkgs yet.
-    # Flatpak: app.zen_browser.zen
+
+    ripgrep        # rg
+    fd
+    gnused         # sed
+    gawk           # awk
+    coreutils      # ls, cat, cp, mv, wc, sort, ...
+    findutils      # find, xargs
+    gnugrep        # grep
+    diffutils      # diff
+    patch
+    jq
+    bash
+    curl
+    wget
+    gnutar         # tar
+    gzip
+    unzip
+    gnumake        # make
+    which
+    util-linux
+
+    unstable.intune-portal
   ];
+
+  # gnome keyring dependency of intune-prortal
+  security.pam.services.login.enableGnomeKeyring = true;
+
+  services = {
+    dbus.packages = with pkgs; [ gcr ];
+    gnome.gnome-keyring.enable = true;
+  };
+
 
   # Allow unfree packages (Chrome, PHPStorm, etc.)
   nixpkgs.config.allowUnfree = true;
@@ -196,6 +232,8 @@
 
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableRedistributableFirmware = true;
+  hardware.bluetooth.powerOnBoot = true;
+  hardware.bluetooth.enable = true;
 
   # List services that you want to enable:
 
@@ -222,3 +260,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
+}
