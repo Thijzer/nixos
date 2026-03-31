@@ -3,7 +3,9 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
-
+let
+  unstable = import <nixpkgs-unstable> {config.allowUnfree = true;};
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -17,7 +19,7 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "thinkpadx1"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -99,21 +101,19 @@
       kdePackages.dolphin
       kdePackages.kate
       google-chrome
-      filezilla
-      postman
-      jetbrains.phpstorm
-      vscode
-      dbeaver-bin
       obsidian
       zed-editor
-      teams-for-linux
       opencode
       localsend
+
+      (unstable.codex)
     ];
   };
 
   # Install firefox.
   programs.firefox.enable = false;
+
+  programs.ssh.startAgent = true;
 
   programs.zsh.enable = true;
 
@@ -133,6 +133,27 @@
     vim
     git
     btop
+
+    ripgrep        # rg
+    fd
+    gnused         # sed
+    gawk           # awk
+    coreutils      # ls, cat, cp, mv, wc, sort, ...
+    findutils      # find, xargs
+    gnugrep        # grep
+    diffutils      # diff
+    patch
+    jq
+    bash
+    curl
+    wget
+    gnutar         # tar
+    gzip
+    unzip
+    gnumake        # make
+    which
+    util-linux
+    bubblewrap
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -157,6 +178,15 @@
       defaultNetwork.settings.dns_enabled = true;
     };
   };
+
+  services.syncthing = {
+    enable = true;
+    openDefaultPorts = true; # Open ports in the firewall for Syncthing. (NOTE: this will not open syncthing gui port)
+    user = "thijzer";
+    dataDir = "/home/thijzer";  # default location for new folders
+    configDir = "/home/thijzer/.config/syncthing";
+  };
+
 
   # Enable Tailscale
   services.tailscale.enable = true;
